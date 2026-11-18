@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>iPusnas Wrapped 2026 — Tahun Membacamu</title>
+<meta name="description" content="Lihat rangkuman tahun membacamu di iPusnas selama 2026: total buku, subjek favorit, julukan pembacamu, dan kartu untuk dibagikan.">
+<style>
+  :root{
+    --krim:#FFF8EC; --hijau:#1F5C4D; --hijau2:#2E7D6B; --emas:#C9A227;
+    --tinta:#26332A; --redup:#6B7A6E; --salah:#B3402E; --garis:#E4D9BE;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--krim); color:var(--tinta);
+    -webkit-font-smoothing:antialiased;
+  }
+  .layar{display:none; min-height:100dvh; flex-direction:column; align-items:center;
+    padding:28px 22px 40px; max-width:520px; margin:0 auto; width:100%;}
+  .layar.aktif{display:flex;}
+  .merek{font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:var(--hijau2);
+    font-weight:700; text-align:center;}
+  .merek .emas{color:var(--emas);}
+  h1{font-family:Georgia,"Times New Roman",serif; font-weight:700; color:var(--hijau);
+    font-size:40px; line-height:1.12; text-align:center; margin:18px 0 10px;}
+  .sub{color:var(--redup); text-align:center; font-size:16px; line-height:1.55; max-width:38ch;}
+  form{width:100%; margin-top:30px; display:flex; flex-direction:column; gap:12px;}
+  label{font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--hijau);}
+  input[type=email],input[type=text]{
+    width:100%; padding:15px 16px; font-size:17px; border:2px solid var(--garis);
+    border-radius:12px; background:#fff; color:var(--tinta); outline:none;}
+  input:focus{border-color:var(--hijau2);}
+  button{
+    appearance:none; border:0; cursor:pointer; border-radius:12px;
+    padding:16px 20px; font-size:17px; font-weight:700; width:100%;
+    background:var(--hijau); color:var(--krim); transition:background .15s;}
+  button:hover{background:var(--hijau2);}
+  button:disabled{opacity:.55; cursor:wait;}
+  .pesan{display:none; width:100%; margin-top:14px; padding:13px 15px; border-radius:10px;
+    font-size:15px; line-height:1.5;}
+  .pesan.tampil{display:block;}
+  .pesan.salah{background:#F9E8E2; color:var(--salah); border:1px solid #EBC4B6;}
+  .pesan.info{background:#EAF2EC; color:var(--hijau); border:1px solid #C9DCCF;}
+  .catatan{margin-top:auto; padding-top:28px; font-size:12.5px; color:var(--redup);
+    text-align:center; line-height:1.6; max-width:44ch;}
+  .langkah{font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--emas);
+    font-weight:700; text-align:center;}
+  h2{font-family:Georgia,"Times New Roman",serif; font-size:27px; line-height:1.25;
+    color:var(--hijau); text-align:center; margin:14px 0 8px;}
+  .pilihan{display:flex; flex-direction:column; gap:10px; width:100%; margin-top:20px;}
+  .pilihan button{background:#fff; color:var(--tinta); border:2px solid var(--garis);
+    text-align:left; font-weight:600; padding:15px 16px;}
+  .pilihan button:hover{border-color:var(--hijau2); background:#FDFDF8;}
+  /* Cerita */
+  #layar-cerita{padding:18px 0 0; max-width:560px;}
+  .segmen{display:flex; gap:5px; width:100%; padding:0 18px;}
+  .segmen i{flex:1; height:4px; border-radius:2px; background:#DCD2B4; display:block;}
+  .segmen i.isi{background:var(--emas);}
+  .panggung{flex:1; width:100%; display:flex; flex-direction:column; justify-content:center;
+    padding:30px 26px; position:relative;}
+  .kicker{font-size:12.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--emas);
+    font-weight:700; margin-bottom:16px;}
+  .besar{font-family:Georgia,"Times New Roman",serif; font-size:44px; line-height:1.14;
+    color:var(--hijau); font-weight:700;}
+  .besar .angka{font-size:84px; display:block; line-height:1; color:var(--hijau);}
+  .isi{margin-top:16px; font-size:18px; line-height:1.6; color:var(--tinta); max-width:34ch;}
+  .isi b{color:var(--hijau);}
+  .label-besar{font-family:Georgia,"Times New Roman",serif; font-size:56px; line-height:1.08;
+    color:var(--hijau); font-weight:700;}
+  .julukan{font-family:Georgia,"Times New Roman",serif; font-style:italic; font-size:23px;
+    color:var(--hijau2); margin-top:8px;}
+  .ringkas{margin-top:26px; border-top:2px solid var(--garis); padding-top:18px;
+    display:grid; grid-template-columns:1fr 1fr; gap:12px 18px; width:100%;}
+  .ringkas div span{display:block; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--redup); font-weight:700; margin-bottom:3px;}
+  .ringkas div strong{font-size:17px; color:var(--tinta);}
+  .aksi{display:flex; flex-direction:column; gap:10px; width:100%; margin-top:28px;}
+  .aksi .kedua{background:#fff; color:var(--hijau); border:2px solid var(--hijau);}
+  .zona{position:absolute; top:0; bottom:0; width:32%; z-index:3; cursor:pointer;}
+  .zona.kiri{left:0;} .zona.kanan{right:0;}
+  .petunjuk{padding:0 26px 22px; font-size:12.5px; color:var(--redup); text-align:center; width:100%;}
+  @media (max-width:380px){ .besar{font-size:36px;} .besar .angka{font-size:68px;} .label-besar{font-size:44px;} }
+</style>
+</head>
+<body>
+
+<!-- ============ EMAIL ============ -->
+<section id="layar-email" class="layar aktif">
+  <div class="merek">iPusnas <span class="emas">•</span> Perpustakaan Nasional RI</div>
+  <h1>Wrapped 2026<br>Tahun Membacamu</h1>
+  <p class="sub">Satu tahun penuh cerita. Lihat berapa banyak buku yang kamu pinjam,
+    subjek favoritmu, dan julukan pembaca yang kamu sandang tahun ini.</p>
+  <form id="form-email">
+    <label for="email">Email akun iPusnas kamu</label>
+    <input type="email" id="email" autocomplete="email" placeholder="nama@email.com" required>
+    <button type="submit" id="tombol-email">Lihat Wrapped-ku</button>
+  </form>
+  <div id="pesan-email" class="pesan"></div>
+  <p class="catatan">Data yang dipakai adalah pinjaman Januari–Oktober 2026
+    (Februari tidak terekam dalam data sumber; November–Desember menyusul).
+    Email dan namamu tidak disimpan oleh halaman ini.</p>
+</section>
+
+<!-- ============ GERBANG ============ -->
+<section id="layar-gerbang" class="layar">
+  <div class="merek">iPusnas <span class="emas">•</span> Wrapped 2026</div>
+  <div id="gerbang-isi" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
+  <div id="pesan-gerbang" class="pesan"></div>
+  <p class="catatan">Dua pertanyaan singkat ini memastikan hanya kamu yang bisa
+    membuka Wrapped-mu. Jawabannya hanya kamu yang tahu dari riwayat pinjammu sendiri.</p>
+</section>
+
+<!-- ============ CERITA ============ -->
+<section id="layar-cerita" class="layar">
+  <div class="segmen" id="segmen"></div>
+  <div class="panggung" id="panggung"></div>
+  <p class="petunjuk">Ketuk sisi kanan untuk lanjut, sisi kiri untuk kembali.</p>
+</section>
+
+<canvas id="kanvas" width="1080" height="1920" style="display:none"></canvas>
+
+<script>
+"use strict";
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli",
+  "Agustus","September","Oktober","November","Desember"];
+const BULAN_ADA = ["2026-01","2026-03","2026-04","2026-05","2026-06",
+  "2026-07","2026-08","2026-09","2026-10"];
+let meta = null, rec = null, kartuIdx = 0, kartuList = [];
+
+const $ = id => document.getElementById(id);
+function tampil(id){
+  document.querySelectorAll(".layar").forEach(s => s.classList.remove("aktif"));
+  $(id).classList.add("aktif");
+  window.scrollTo(0,0);
+}
+function pesan(el, teks, jenis){
+  const p = $(el); p.textContent = teks;
+  p.className = "pesan tampil " + (jenis || "info");
+}
+async function sha256(str){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
+}
+const normNama = s => s.trim().toLowerCase().split(/\s+/).join(" ");
+const namaBulan = ym => ym ? BULAN[parseInt(ym.slice(5,7),10)-1] : "-";
+function acak(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]); }
+
+/* ---------- kunci percobaan ---------- */
+function sisaKunci(){
+  const s = parseInt(localStorage.getItem("wrapped_kunci") || "0", 10);
+  return s - Date.now();
+}
+function catatGagal(){
+  const n = parseInt(localStorage.getItem("wrapped_gagal") || "0", 10) + 1;
+  localStorage.setItem("wrapped_gagal", String(n));
+  if (n >= 3){
+    localStorage.setItem("wrapped_kunci", String(Date.now() + 15*60*1000));
+    localStorage.setItem("wrapped_gagal", "0");
+    return true;
+  }
+  return false;
+}
+function bersihGagal(){ localStorage.removeItem("wrapped_gagal"); }
+
+/* ---------- langkah 1: email ---------- */
+$("form-email").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  if (!window.crypto || !crypto.subtle){
+    pesan("pesan-email", "Buka halaman ini dari tautan resminya (https) agar verifikasi bisa berjalan.", "salah");
+    return;
+  }
+  if (sisaKunci() > 0){
+    pesan("pesan-email", "Terlalu banyak percobaan. Coba lagi dalam beberapa menit ya.", "salah");
+    return;
+  }
+  const tombol = $("tombol-email");
+  tombol.disabled = true; tombol.textContent = "Mencari…";
+  try{
+    const email = $("email").value.trim().toLowerCase();
+    const h = await sha256(email);
+    if (!meta) meta = await (await fetch("meta.json")).json();
+    const shard = await (await fetch("data/" + h.slice(0,2) + ".json")).json();
+    rec = shard[h.slice(0,32)] || null;
+    if (!rec){
+      pesan("pesan-email",
+        "Email ini tidak ditemukan dalam data pinjaman 2026. Pastikan emailnya sama dengan akun iPusnas kamu, atau mungkin kamu belum meminjam tahun ini.", "salah");
+      return;
+    }
+    tampil("layar-gerbang");
+    langkahNama();
+  }catch(e){
+    pesan("pesan-email", "Ada gangguan saat memuat data. Periksa koneksimu lalu coba lagi.", "salah");
+  }finally{
+    tombol.disabled = false; tombol.textContent = "Lihat Wrapped-ku";
+  }
+});
+
+/* ---------- langkah 2: gerbang ---------- */
+function gagalGerbang(teksBenar){
+  if (catatGagal()){
+    tampil("layar-email");
+    pesan("pesan-email", "Tiga kali belum cocok, jadi akses dikunci 15 menit dulu ya. Setelah itu silakan coba lagi.", "salah");
+  }else{
+    pesan("pesan-gerbang", teksBenar, "salah");
+  }
+}
+function langkahNama(){
+  const isi = $("gerbang-isi");
+  if (rec.n){
+    isi.innerHTML = `
+      <div class="langkah">Pertanyaan 1 dari 2</div>
+      <h2>Siapa nama lengkapmu di akun iPusnas?</h2>
+      <p class="sub">Tulis persis seperti nama yang terdaftar. Huruf besar-kecil tidak masalah.</p>
+      <form id="form-nama">
+        <input type="text" id="nama" autocomplete="name" placeholder="Nama lengkap" required>
+        <button type="submit">Lanjut</button>
+      </form>`;
+    $("form-nama").addEventListener("submit", async ev => {
+      ev.preventDefault();
+      const h = await sha256(normNama($("nama").value));
+      if (h === rec.n){ bersihGagal(); langkahBulan(); }
+      else gagalGerbang("Nama itu belum cocok dengan yang terdaftar. Coba ingat lagi ejaan nama di akunmu.");
+    });
+  }else{
+    isi.innerHTML = `
+      <div class="langkah">Pertanyaan 1 dari 2</div>
+      <h2>Buku apa yang pertama kali kamu pinjam di 2026?</h2>
+      <p class="sub">Pilih satu yang paling benar.</p>
+      <div class="pilihan" id="pilihan-buku"></div>`;
+    const umpan = acak(meta.judulUmpan.filter(j => j !== rec.jp)).slice(0,3);
+    const wadah = $("pilihan-buku");
+    acak([rec.jp, ...umpan]).forEach(j => {
+      const b = document.createElement("button");
+      b.textContent = j;
+      b.addEventListener("click", () => {
+        if (j === rec.jp){ bersihGagal(); langkahBulan(); }
+        else gagalGerbang("Bukan buku itu yang tercatat pertama. Coba pilihan lain.");
+      });
+      wadah.appendChild(b);
+    });
+  }
+}
+function langkahBulan(){
+  const isi = $("gerbang-isi");
+  isi.innerHTML = `
+    <div class="langkah">Pertanyaan 2 dari 2</div>
+    <h2>Di bulan apa kamu pertama kali meminjam di 2026?</h2>
+    <p class="sub">Pilih bulannya.</p>
+    <div class="pilihan" id="pilihan-bulan"></div>`;
+  const umpan = acak(BULAN_ADA.filter(b => b !== rec.fm)).slice(0,3);
+  const wadah = $("pilihan-bulan");
+  acak([rec.fm, ...umpan]).forEach(ym => {
+    const b = document.createElement("button");
+    b.textContent = namaBulan(ym);
+    b.addEventListener("click", () => {
+      if (ym === rec.fm){ bersihGagal(); mulaiCerita(); }
+      else gagalGerbang("Bulan itu belum cocok dengan catatan pinjaman pertamamu. Coba lagi.");
+    });
+    wadah.appendChild(b);
+  });
+}
+
+/* ---------- langkah 3: cerita ---------- */
+function teksPersentil(){
+  if (rec.ps >= 99.95) return "Kamu membaca lebih banyak dari hampir semua pembaca iPusnas tahun ini.";
+  return "Kamu membaca lebih banyak dari <b>" + Math.floor(rec.ps) + "% pembaca</b> iPusnas tahun ini.";
+}
+function bangunKartu(){
+  const sf = meta.subjekList[rec.sf], ef = meta.epustakaList[rec.ef];
+  const lb = meta.labelList[rec.lb], sn = meta.julukanList[rec.sn];
+  kartuList = [
+    { kicker:"iPusnas Wrapped 2026",
+      judul:"Tahun membacamu,<br>dirangkum.",
+      isi:"Ini perjalanan pinjammu sepanjang <b>Januari–Oktober 2026</b>. Geser terus sampai akhir, ada julukan resmi untukmu." },
+    { kicker:"Total pinjaman",
+      judul:'<span class="angka">' + rec.t + "</span>buku kamu pinjam tahun ini",
+      isi:"Dari <b>" + rec.ju + " judul berbeda</b>. Setiap buku yang selesai adalah satu cerita yang kamu bawa pulang." },
+    { kicker:"Awal perjalanan",
+      judul:"Semuanya mulai dari satu buku",
+      isi:"Buku pertamamu tahun ini: <b>" + rec.jp + "</b>, dipinjam di bulan <b>" + namaBulan(rec.fm) + "</b>." },
+    { kicker:"Subjek favorit",
+      judul: sf,
+      isi:"Itu subjek yang paling sering kamu pinjam. Karenanya julukanmu: <b>" + sn + "</b>." },
+    { kicker:"Bulan teraktif",
+      judul: namaBulan(rec.ba),
+      isi:"Di bulan itu kamu meminjam <b>" + (rec.bn || 0) + " buku</b>, bulan paling sibukmu sebagai pembaca. Koleksi paling sering kamu ambil dari ePustaka <b>" + ef + "</b>." },
+    { kicker:"Posisimu di antara pembaca",
+      judul:"Di jajaran atas",
+      isi: teksPersentil() + " Dari total <b>399.435 pembaca</b> iPusnas di 2026." },
+    { kicker:"Satu hal lagi",
+      judul:"Buku ini milik bersama",
+      isi:"iPusnas gratis untuk semua. Yuk jaga sama-sama: <b>pinjam seperlunya, kembalikan tepat waktu</b>, supaya bukunya bisa dibaca bergantian oleh pembaca lain." },
+    { kicker:"Julukanmu",
+      label: lb, julukan: sn, final: true },
+  ];
+}
+function renderKartu(){
+  const seg = $("segmen");
+  seg.innerHTML = kartuList.map((_,i) => '<i class="' + (i <= kartuIdx ? "isi" : "") + '"></i>').join("");
+  const k = kartuList[kartuIdx], p = $("panggung");
+  if (k.final){
+    const sf = meta.subjekList[rec.sf];
+    p.innerHTML = `
+      <div>
+        <div class="kicker">${k.kicker}</div>
+        <div class="label-besar">${k.label}</div>
+        <div class="julukan">${k.julukan}</div>
+        <div class="ringkas">
+          <div><span>Total buku</span><strong>${rec.t} buku</strong></div>
+          <div><span>Judul berbeda</span><strong>${rec.ju}</strong></div>
+          <div><span>Subjek favorit</span><strong>${sf}</strong></div>
+          <div><span>Bulan teraktif</span><strong>${namaBulan(rec.ba)}</strong></div>
+        </div>
+        <div class="aksi">
+          <button id="tombol-unduh">Unduh Kartu untuk Dibagikan</button>
+          <button id="tombol-bagi" class="kedua">Bagikan</button>
+        </div>
+      </div>
+      <div class="zona kiri" data-arah="-1"></div>`;
+    $("tombol-unduh").addEventListener("click", ev => { ev.stopPropagation(); unduhKartu(); });
+    const bagi = $("tombol-bagi");
+    if (!navigator.share) bagi.style.display = "none";
+    bagi.addEventListener("click", ev => { ev.stopPropagation(); bagikanKartu(); });
+  }else{
+    p.innerHTML = `
+      <div>
+        <div class="kicker">${k.kicker}</div>
+        <div class="besar">${k.judul}</div>
+        <p class="isi">${k.isi}</p>
+      </div>
+      <div class="zona kiri" data-arah="-1"></div>
+      <div class="zona kanan" data-arah="1"></div>`;
+  }
+  p.querySelectorAll(".zona").forEach(z => z.addEventListener("click", () => {
+    const d = parseInt(z.dataset.arah, 10);
+    const baru = Math.min(kartuList.length - 1, Math.max(0, kartuIdx + d));
+    if (baru !== kartuIdx){ kartuIdx = baru; renderKartu(); }
+  }));
+}
+function mulaiCerita(){
+  bangunKartu(); kartuIdx = 0;
+  tampil("layar-cerita"); renderKartu();
+}
+document.addEventListener("keydown", e => {
+  if (!$("layar-cerita").classList.contains("aktif")) return;
+  if (e.key === "ArrowRight" && kartuIdx < kartuList.length - 1){ kartuIdx++; renderKartu(); }
+  if (e.key === "ArrowLeft" && kartuIdx > 0){ kartuIdx--; renderKartu(); }
+});
+
+/* ---------- kartu bagikan (canvas 1080x1920) ---------- */
+function bungkusTeks(ctx, teks, x, y, lebar, tinggiBaris, maksBaris){
+  const kata = String(teks).split(/\s+/);
+  let baris = "", yy = y, n = 0;
+  for (const k of kata){
+    const uji = baris ? baris + " " + k : k;
+    if (ctx.measureText(uji).width > lebar && baris){
+      ctx.fillText(baris, x, yy); yy += tinggiBaris; n++;
+      if (n >= maksBaris) return yy;
+      baris = k;
+    }else baris = uji;
+  }
+  if (baris && n < maksBaris){ ctx.fillText(baris, x, yy); yy += tinggiBaris; }
+  return yy;
+}
+function gambarKartu(){
+  const cv = $("kanvas"), ctx = cv.getContext("2d");
+  const sf = meta.subjekList[rec.sf], lb = meta.labelList[rec.lb], sn = meta.julukanList[rec.sn];
+  ctx.fillStyle = "#1F5C4D"; ctx.fillRect(0,0,1080,1920);
+  ctx.strokeStyle = "#C9A227"; ctx.lineWidth = 3; ctx.strokeRect(48,48,984,1824);
+  ctx.fillStyle = "#FFF8EC"; ctx.textAlign = "center";
+  ctx.font = "700 34px Arial"; 
+  ctx.fillText("I P U S N A S   W R A P P E D   2 0 2 6", 540, 170);
+  ctx.font = "400 30px Arial"; ctx.fillStyle = "#BFD8CE";
+  ctx.fillText("Perpustakaan Nasional Republik Indonesia", 540, 222);
+  ctx.fillStyle = "#FFF8EC"; ctx.font = "italic 34px Georgia";
+  ctx.fillText("Julukanmu tahun ini", 540, 400);
+  ctx.fillStyle = "#C9A227"; ctx.font = "700 104px Georgia";
+  let y = bungkusTeks(ctx, lb, 540, 540, 880, 116, 3);
+  ctx.fillStyle = "#FFF8EC"; ctx.font = "italic 44px Georgia";
+  y = bungkusTeks(ctx, sn, 540, y + 30, 880, 56, 2);
+  ctx.strokeStyle = "#C9A227"; ctx.beginPath(); ctx.moveTo(340, y + 36); ctx.lineTo(740, y + 36); ctx.stroke();
+  const kiri = 150; let ry = y + 150;
+  ctx.textAlign = "left";
+  const barisData = [
+    ["Total buku dipinjam", rec.t + " buku"],
+    ["Judul berbeda", String(rec.ju)],
+    ["Subjek favorit", sf],
+    ["Bulan teraktif", namaBulan(rec.ba)],
+    ["Buku pertama tahun ini", rec.jp],
+  ];
+  for (const [a,b] of barisData){
+    ctx.fillStyle = "#BFD8CE"; ctx.font = "700 27px Arial";
+    ctx.fillText(a.toUpperCase(), kiri, ry);
+    ctx.fillStyle = "#FFF8EC"; ctx.font = "700 42px Georgia";
+    ry = bungkusTeks(ctx, b, kiri, ry + 52, 780, 50, 2);
+    ry += 40;
+  }
+  ctx.textAlign = "center"; ctx.fillStyle = "#C9A227"; ctx.font = "700 40px Georgia";
+  const ps = rec.ps >= 99.95 ? "Lebih rajin dari hampir semua pembaca"
+    : "Lebih rajin dari " + Math.floor(rec.ps) + "% pembaca iPusnas";
+  bungkusTeks(ctx, ps, 540, 1560, 880, 52, 2);
+  ctx.fillStyle = "#BFD8CE"; ctx.font = "400 27px Arial";
+  bungkusTeks(ctx, "iPusnas gratis untuk semua. Pinjam seperlunya, kembalikan tepat waktu.",
+    540, 1700, 840, 38, 3);
+  ctx.fillStyle = "#FFF8EC"; ctx.font = "700 28px Arial";
+  ctx.fillText("Yuk jaga perpustakaan kita bersama.", 540, 1812);
+  return cv;
+}
+function unduhKartu(){
+  const cv = gambarKartu();
+  const a = document.createElement("a");
+  a.download = "ipusnas-wrapped-2026.png";
+  a.href = cv.toDataURL("image/png");
+  a.click();
+}
+async function bagikanKartu(){
+  const cv = gambarKartu();
+  const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+  const file = new File([blob], "ipusnas-wrapped-2026.png", {type:"image/png"});
+  try{
+    if (navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:"iPusnas Wrapped 2026"});
+    }else{
+      await navigator.share({title:"iPusnas Wrapped 2026",
+        text:"Label pembacaku di iPusnas Wrapped 2026: " + meta.labelList[rec.lb]});
+    }
+  }catch(e){ /* dibatalkan pengguna */ }
+}
+</script>
+</body>
+</html>
