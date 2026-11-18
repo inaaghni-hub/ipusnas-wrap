@@ -207,8 +207,8 @@ function gagalGerbang(teksBenar){
   }
 }
 function langkahNama(){
-  const isi = $("gerbang-isi");
   if (rec.n){
+    const isi = $("gerbang-isi");
     isi.innerHTML = `
       <div class="langkah">Pertanyaan 1 dari 2</div>
       <h2>Siapa nama lengkapmu di akun iPusnas?</h2>
@@ -220,43 +220,47 @@ function langkahNama(){
     $("form-nama").addEventListener("submit", async ev => {
       ev.preventDefault();
       const h = await sha256(normNama($("nama").value));
-      if (h === rec.n){ bersihGagal(); langkahBulan(); }
+      if (h === rec.n){ bersihGagal(); langkahBuku(2); }
       else gagalGerbang("Nama itu belum cocok dengan yang terdaftar. Coba ingat lagi ejaan nama di akunmu.");
     });
   }else{
-    isi.innerHTML = `
-      <div class="langkah">Pertanyaan 1 dari 2</div>
-      <h2>Buku apa yang pertama kali kamu pinjam di 2026?</h2>
-      <p class="sub">Pilih satu yang paling benar.</p>
-      <div class="pilihan" id="pilihan-buku"></div>`;
-    const umpan = acak(meta.judulUmpan.filter(j => j !== rec.jp)).slice(0,3);
-    const wadah = $("pilihan-buku");
-    acak([rec.jp, ...umpan]).forEach(j => {
-      const b = document.createElement("button");
-      b.textContent = j;
-      b.addEventListener("click", () => {
-        if (j === rec.jp){ bersihGagal(); langkahBulan(); }
-        else gagalGerbang("Bukan buku itu yang tercatat pertama. Coba pilihan lain.");
-      });
-      wadah.appendChild(b);
-    });
+    langkahBuku(1, () => langkahBulanTeraktif(2));
   }
 }
-function langkahBulan(){
+function langkahBuku(nomor, lanjut){
   const isi = $("gerbang-isi");
   isi.innerHTML = `
-    <div class="langkah">Pertanyaan 2 dari 2</div>
-    <h2>Di bulan apa kamu pertama kali meminjam di 2026?</h2>
+    <div class="langkah">Pertanyaan ${nomor} dari 2</div>
+    <h2>Buku apa yang pertama kali kamu pinjam di 2026?</h2>
+    <p class="sub">Pilih satu yang paling benar.</p>
+    <div class="pilihan" id="pilihan-buku"></div>`;
+  const umpan = acak(meta.judulUmpan.filter(j => j !== rec.jp)).slice(0,3);
+  const wadah = $("pilihan-buku");
+  acak([rec.jp, ...umpan]).forEach(j => {
+    const b = document.createElement("button");
+    b.textContent = j;
+    b.addEventListener("click", () => {
+      if (j === rec.jp){ bersihGagal(); if (lanjut) lanjut(); else mulaiCerita(); }
+      else gagalGerbang("Bukan buku itu yang tercatat pertama. Coba pilihan lain.");
+    });
+    wadah.appendChild(b);
+  });
+}
+function langkahBulanTeraktif(nomor){
+  const isi = $("gerbang-isi");
+  isi.innerHTML = `
+    <div class="langkah">Pertanyaan ${nomor} dari 2</div>
+    <h2>Di bulan apa kamu paling banyak meminjam di 2026?</h2>
     <p class="sub">Pilih bulannya.</p>
     <div class="pilihan" id="pilihan-bulan"></div>`;
-  const umpan = acak(BULAN_ADA.filter(b => b !== rec.fm)).slice(0,3);
+  const umpan = acak(BULAN_ADA.filter(b => b !== rec.ba)).slice(0,3);
   const wadah = $("pilihan-bulan");
-  acak([rec.fm, ...umpan]).forEach(ym => {
+  acak([rec.ba, ...umpan]).forEach(ym => {
     const b = document.createElement("button");
     b.textContent = namaBulan(ym);
     b.addEventListener("click", () => {
-      if (ym === rec.fm){ bersihGagal(); mulaiCerita(); }
-      else gagalGerbang("Bulan itu belum cocok dengan catatan pinjaman pertamamu. Coba lagi.");
+      if (ym === rec.ba){ bersihGagal(); mulaiCerita(); }
+      else gagalGerbang("Bulan itu belum cocok dengan catatan bulan teraktifmu. Coba lagi.");
     });
     wadah.appendChild(b);
   });
