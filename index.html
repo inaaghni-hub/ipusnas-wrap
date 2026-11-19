@@ -339,12 +339,14 @@ function renderKartu(){
           <button id="tombol-unduh">Unduh Kartu untuk Dibagikan</button>
           <button id="tombol-bagi" class="kedua">Bagikan</button>
           <button id="tombol-foto" class="kedua">${fotoUser ? "Ganti Foto Kamu" : "Tambah Foto Kamu"}</button>
+          <button id="tombol-transparan" class="kedua">Unduh Varian Transparan</button>
         </div>
         <input type="file" id="input-foto" accept="image/*" hidden>
         <p class="catatan" style="margin-top:10px">Foto yang kamu tambahkan hanya dipakai di perangkatmu untuk kartu ini, tidak diunggah ke mana pun.</p>
       </div>
       <div class="zona kiri" data-arah="-1"></div>`;
     $("tombol-unduh").addEventListener("click", ev => { ev.stopPropagation(); unduhKartu(); });
+    $("tombol-transparan").addEventListener("click", ev => { ev.stopPropagation(); unduhKartuTransparan(); });
     const tf = $("tombol-foto"), inf = $("input-foto");
     tf.addEventListener("click", ev => { ev.stopPropagation(); inf.click(); });
     inf.addEventListener("change", () => {
@@ -399,16 +401,19 @@ function bungkusTeks(ctx, teks, x, y, lebar, tinggiBaris, maksBaris){
   if (baris && n < maksBaris){ ctx.fillText(baris, x, yy); yy += tinggiBaris; }
   return yy;
 }
-function gambarKartu(){
+function gambarKartu(transparan){
   const cv = $("kanvas"), ctx = cv.getContext("2d");
   const sf = meta.subjekList[rec.sf], lb = meta.labelList[rec.lb], sn = meta.julukanList[rec.sn];
-  if (imgLatar.complete && imgLatar.naturalWidth){
-    const s = Math.max(1080 / imgLatar.naturalWidth, 1920 / imgLatar.naturalHeight);
-    const w = imgLatar.naturalWidth * s, h = imgLatar.naturalHeight * s;
-    ctx.drawImage(imgLatar, (1080 - w) / 2, (1920 - h) / 2, w, h);
-    ctx.fillStyle = "rgba(31,92,77,0.86)"; ctx.fillRect(0, 0, 1080, 1920);
-  } else {
-    ctx.fillStyle = "#1F5C4D"; ctx.fillRect(0, 0, 1080, 1920);
+  ctx.clearRect(0, 0, 1080, 1920);
+  if (!transparan){
+    if (imgLatar.complete && imgLatar.naturalWidth){
+      const s = Math.max(1080 / imgLatar.naturalWidth, 1920 / imgLatar.naturalHeight);
+      const w = imgLatar.naturalWidth * s, h = imgLatar.naturalHeight * s;
+      ctx.drawImage(imgLatar, (1080 - w) / 2, (1920 - h) / 2, w, h);
+      ctx.fillStyle = "rgba(31,92,77,0.86)"; ctx.fillRect(0, 0, 1080, 1920);
+    } else {
+      ctx.fillStyle = "#1F5C4D"; ctx.fillRect(0, 0, 1080, 1920);
+    }
   }
   ctx.strokeStyle = "#C9A227"; ctx.lineWidth = 3; ctx.strokeRect(48,48,984,1824);
   ctx.fillStyle = "#FFF8EC"; ctx.textAlign = "center";
@@ -466,14 +471,21 @@ function gambarKartu(){
   return cv;
 }
 function unduhKartu(){
-  const cv = gambarKartu();
+  const cv = gambarKartu(false);
   const a = document.createElement("a");
   a.download = "ipusnas-wrapped-2026.png";
   a.href = cv.toDataURL("image/png");
   a.click();
 }
+function unduhKartuTransparan(){
+  const cv = gambarKartu(true);
+  const a = document.createElement("a");
+  a.download = "ipusnas-wrapped-2026-transparan.png";
+  a.href = cv.toDataURL("image/png");
+  a.click();
+}
 async function bagikanKartu(){
-  const cv = gambarKartu();
+  const cv = gambarKartu(false);
   const blob = await new Promise(r => cv.toBlob(r, "image/png"));
   const file = new File([blob], "ipusnas-wrapped-2026.png", {type:"image/png"});
   try{
