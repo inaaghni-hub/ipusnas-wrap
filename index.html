@@ -70,7 +70,8 @@
   .label-besar{font-family:Georgia,"Times New Roman",serif; font-size:56px; line-height:1.08;
     color:var(--hijau); font-weight:700;}
   .julukan{font-family:Georgia,"Times New Roman",serif; font-style:italic; font-size:23px;
-    color:var(--hijau2); margin-top:8px;}
+    color:var(--hijau2); margin-top:4px;}
+  .julukan-dari{font-size:15.5px; color:var(--redup); margin-top:14px;}
   .ringkas{margin-top:26px; border-top:2px solid var(--garis); padding-top:18px;
     display:grid; grid-template-columns:1fr 1fr; gap:12px 18px; width:100%;}
   .ringkas div span{display:block; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
@@ -310,6 +311,7 @@ function renderKartu(){
       <div>
         <div class="kicker">${k.kicker}</div>
         <div class="label-besar">${k.label}</div>
+        <div class="julukan-dari">Dari kategori yang dibaca, kamu termasuk</div>
         <div class="julukan">${k.julukan}</div>
         <div class="ringkas">
           <div><span>Total buku</span><strong>${rec.t} buku</strong></div>
@@ -382,8 +384,10 @@ function gambarKartu(){
   ctx.fillText("Julukanmu tahun ini", 540, 400);
   ctx.fillStyle = "#C9A227"; ctx.font = "700 104px Georgia";
   let y = bungkusTeks(ctx, lb, 540, 540, 880, 116, 3);
+  ctx.fillStyle = "#BFD8CE"; ctx.font = "italic 30px Georgia";
+  ctx.fillText("Dari kategori yang dibaca, kamu termasuk", 540, y + 36);
   ctx.fillStyle = "#FFF8EC"; ctx.font = "italic 44px Georgia";
-  y = bungkusTeks(ctx, sn, 540, y + 30, 880, 56, 2);
+  y = bungkusTeks(ctx, sn, 540, y + 98, 880, 56, 2);
   ctx.strokeStyle = "#C9A227"; ctx.beginPath(); ctx.moveTo(340, y + 36); ctx.lineTo(740, y + 36); ctx.stroke();
   const kiri = 150; let ry = y + 150;
   ctx.textAlign = "left";
