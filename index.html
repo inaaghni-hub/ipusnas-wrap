@@ -410,10 +410,12 @@ function gambarKartu(mode){
   const sf = meta.subjekList[rec.sf], lb = meta.labelList[rec.lb], sn = meta.julukanList[rec.sn];
   ctx.clearRect(0, 0, 1080, 1920);
   if (!mode){
-    if (imgLatar.complete && imgLatar.naturalWidth){
-      const s = Math.max(1080 / imgLatar.naturalWidth, 1920 / imgLatar.naturalHeight);
-      const w = imgLatar.naturalWidth * s, h = imgLatar.naturalHeight * s;
-      ctx.drawImage(imgLatar, (1080 - w) / 2, (1920 - h) / 2, w, h);
+    const latar = (fotoUser && fotoUser.naturalWidth) ? fotoUser
+      : (imgLatar.complete && imgLatar.naturalWidth ? imgLatar : null);
+    if (latar){
+      const s = Math.max(1080 / latar.naturalWidth, 1920 / latar.naturalHeight);
+      const w = latar.naturalWidth * s, h = latar.naturalHeight * s;
+      ctx.drawImage(latar, (1080 - w) / 2, (1920 - h) / 2, w, h);
       ctx.fillStyle = "rgba(31,92,77,0.86)"; ctx.fillRect(0, 0, 1080, 1920);
     } else {
       ctx.fillStyle = "#1F5C4D"; ctx.fillRect(0, 0, 1080, 1920);
@@ -428,7 +430,7 @@ function gambarKartu(mode){
   ctx.fillText("I P U S N A S   W R A P P E D   2 0 2 6", 540, 170);
   ctx.font = "400 30px Arial"; ctx.fillStyle = cRedup;
   ctx.fillText("Perpustakaan Nasional Republik Indonesia", 540, 222);
-  if (fotoUser && fotoUser.naturalWidth){
+  if (mode && fotoUser && fotoUser.naturalWidth){
     const cx = 540, cy = 298, r = 58;
     ctx.save();
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
@@ -436,8 +438,6 @@ function gambarKartu(mode){
     const w = fotoUser.naturalWidth * s, h = fotoUser.naturalHeight * s;
     ctx.drawImage(fotoUser, cx - w / 2, cy - h / 2, w, h);
     ctx.restore();
-    ctx.strokeStyle = cEmas; ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
   }
   ctx.fillStyle = cTeks; ctx.font = "italic 34px Georgia";
   ctx.fillText("Julukanmu tahun ini", 540, 400);
